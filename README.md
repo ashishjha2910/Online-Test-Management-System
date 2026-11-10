@@ -161,3 +161,10 @@ src/
 ---
 
 If you find an issue or have a suggestion, feel free to open a GitHub issue.
+
+## Screenshots
+
+| Application Preview | Screenshot |
+|---|---|
+| Preview 1 | ![Application screenshot 1](screenshots/screenshot-1.png) |
+| Preview 2 | ![Application screenshot 2](screenshots/screenshot-2.png) |
