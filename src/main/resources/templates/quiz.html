@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title th:text="${quiz.title} + ' | Online Test'"></title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar"><a class="brand" th:href="@{/dashboard}">Online Test</a><a class="nav-link" th:href="@{/dashboard}">Dashboard</a></header>
+<main class="container narrow">
+  <h1 th:text="${quiz.title}"></h1><p class="muted" th:text="${quiz.description}"></p>
+  <p class="muted" th:text="${#lists.size(quiz.questions)} + ' questions'"></p>
+  <p class="error" th:if="${#lists.isEmpty(quiz.questions)}">This test has no questions yet.</p>
+  <form method="post" th:action="@{/quiz/{id}/submit(id=${quiz.id})}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    <section class="question" th:each="question,stat : ${quiz.questions}">
+      <h3><span th:text="${stat.count} + '. '"></span><span th:text="${question.questionText}"></span></h3>
+      <label class="choice" th:each="option : ${question.options}">
+        <input type="radio" th:name="'q' + ${question.id}" th:value="${option}" required>
+        <span th:text="${option}"></span>
+      </label>
+    </section>
+    <button type="submit" th:disabled="${#lists.isEmpty(quiz.questions)}">Submit answers</button>
+  </form>
+</main>
+</body></html>

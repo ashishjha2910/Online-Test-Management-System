@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dashboard | Online Test</title><link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" th:href="@{/dashboard}">Online Test</a>
+  <div><span class="muted" th:text="${email}"></span>
+    <a class="nav-link" th:if="${isAdmin}" th:href="@{/admin}">Admin</a>
+    <form class="inline" method="post" th:action="@{/logout}">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+      <button class="secondary" type="submit">Logout</button>
+    </form>
+  </div>
+</header>
+<main class="container">
+  <h1>Your dashboard</h1>
+  <p class="muted">Choose an active assessment to begin.</p>
+  <p class="success" th:if="${result}" th:text="${result}"></p>
+  <p class="error" th:if="${error}" th:text="${error}"></p>
+  <section class="cards">
+    <article class="card" th:each="quiz : ${quizzes}">
+      <h2 th:text="${quiz.title}"></h2>
+      <p th:text="${quiz.description}"></p>
+      <p class="muted" th:text="${#lists.size(quiz.questions)} + ' questions'"></p>
+      <a class="button-link" th:href="@{/quiz/{id}(id=${quiz.id})}">Start test</a>
+    </article>
+  </section>
+  <p class="muted" th:if="${#lists.isEmpty(quizzes)}">No tests are available yet.</p>
+  <h2 class="section-heading">Recent attempts</h2>
+  <div class="table-wrap">
+    <table><thead><tr><th>Assessment</th><th>Score</th><th>Submitted</th></tr></thead>
+      <tbody>
+        <tr th:each="attempt : ${attempts}">
+          <td th:text="${attempt.quiz.title}"></td>
+          <td th:text="${attempt.score} + ' / ' + ${attempt.totalQuestions}"></td>
+          <td th:text="${#temporals.format(attempt.submittedAt, 'dd MMM yyyy HH:mm')}"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</body></html>
