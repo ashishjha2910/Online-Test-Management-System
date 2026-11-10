@@ -1,102 +1,163 @@
 # Online Test Management System
 
-A full-stack assessment application built with Java 17, Spring Boot, Spring Security, Thymeleaf, Spring Data JPA and MySQL.
+A full-stack web application for creating, managing and attempting online assessments. Built using Java, Spring Boot, Spring Security, Thymeleaf and MySQL.
+
+## Overview
+
+The Online Test Management System provides separate experiences for administrators and students. Administrators can manage assessments and questions, while registered users can attempt active assessments and review their scores.
 
 ## Features
 
+### Authentication and security
 - User registration and login
-- BCrypt password hashing
-- Role-based access control (USER and ADMIN)
-- Admin-only assessment creation and activation/deactivation
-- Multiple-choice question management
-- Test attempts with automatic scoring
-- Recent attempt history
-- CSRF protection on form submissions
-- MySQL persistence through Spring Data JPA
+- Secure password hashing using BCrypt
+- Role-based access control for USER and ADMIN
+- Protected administrator routes
+- CSRF protection for form submissions
 
-## Requirements
+### Administrator
+- Create assessments with titles and descriptions
+- Add multiple-choice questions
+- Configure answer options and correct answers
+- Activate or deactivate assessments
 
-- JDK 17+
-- Maven 3.8+
-- MySQL 8+
+### Student
+- View available active assessments
+- Attempt multiple-choice tests
+- Automatic score calculation
+- View recent assessment attempts and scores
 
-## Database setup
+## Technology Stack
 
-Create the database:
+| Area | Technology |
+|---|---|
+| Language | Java 17 |
+| Backend | Spring Boot 3.3.5 |
+| Security | Spring Security |
+| Frontend | Thymeleaf, HTML, CSS |
+| Persistence | Spring Data JPA, Hibernate |
+| Database | MySQL 8 |
+| Build | Maven |
+
+## Application Requirements
+
+- Java Development Kit (JDK) 17 or later
+- Maven 3.8 or later
+- MySQL 8 or later
+- Git
+
+## Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/ashishjha2910/Online-Test-Management-System.git
+cd Online-Test-Management-System
+```
+
+### 2. Create the database
+
+Log in to MySQL and execute:
 
 ```sql
 CREATE DATABASE onlinetest_db;
 ```
 
-Or run:
+### 3. Configure database credentials
 
-```bash
-mysql -u root -p < database.sql
-```
-
-Tables are created and updated by Hibernate when the application starts.
-
-## Configure database credentials
-
-Set environment variables in the terminal before running the application:
+The application supports environment-based configuration.
 
 ```bash
 export DB_URL='jdbc:mysql://localhost:3306/onlinetest_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC'
-export DB_USER='root'
+export DB_USER='your_mysql_username'
 export DB_PASSWORD='your_mysql_password'
 ```
 
-Credentials are read from environment variables and are not stored in the repository.
+Use credentials for a MySQL account that has access to `onlinetest_db`. Do not commit real passwords or secrets to GitHub.
 
-## Build and test
+### 4. Build and run tests
 
 ```bash
-mvn clean test package
+mvn clean test
 ```
 
-## Run
+To package the application:
+
+```bash
+mvn clean package
+```
+
+### 5. Start the application
 
 ```bash
 mvn spring-boot:run
 ```
 
-Open http://localhost:8080.
+Open the application at:
 
-## First-time setup
+**http://localhost:8080**
 
-1. Register an account at `/register`.
-2. Sign in at `/login`.
-3. To enable the administrator interface, promote your registered account directly in MySQL:
+Hibernate manages the application tables through the configured JPA schema-generation setting.
+
+## First-Time Administrator Setup
+
+1. Register an account through `/register`.
+2. Log in using `/login`.
+3. Promote the intended account to administrator directly in MySQL:
 
 ```sql
-UPDATE users SET role='ADMIN' WHERE email='your-email@example.com';
+UPDATE users
+SET role = 'ADMIN'
+WHERE email = 'your-email@example.com';
 ```
 
-4. Sign out and sign in again. The Admin link will appear.
-5. Create an assessment, add questions and options, and specify the correct answer exactly as one of the options.
-6. Normal users can take active tests and see their scores in the dashboard.
+4. Log out and log in again to refresh the authenticated role.
+5. Open the Admin interface and create an assessment.
 
-New registrations always receive the USER role. Do not expose administrator privileges through public registration.
+New registrations receive the `USER` role. Administrator privileges should only be assigned through a trusted administrative process.
 
-## Project structure
+## Application Routes
+
+| Route | Purpose |
+|---|---|
+| `/register` | User registration |
+| `/login` | User login |
+| `/dashboard` | Assessment dashboard and attempt history |
+| `/quiz/{id}` | Attempt an assessment |
+| `/admin` | Administrator assessment management |
+
+Administrator routes require the ADMIN role.
+
+## Project Structure
 
 ```text
-src/main/java/com/onlinetest/
-  config/       Security configuration
-  controller/   Login, registration, quiz and admin routes
-  model/        User, quiz, question and attempt entities
-  repository/   Spring Data repositories
-  service/      Registration, authentication and scoring services
-src/main/resources/
-  templates/    Thymeleaf pages
-  static/css/   Application styles
+src/
+└── main/
+    ├── java/com/onlinetest/
+    │   ├── config/       # Security configuration
+    │   ├── controller/   # Application routes
+    │   ├── model/        # JPA entities
+    │   ├── repository/   # Data access
+    │   └── service/      # Business logic
+    └── resources/
+        ├── templates/    # Thymeleaf pages
+        └── static/css/   # Stylesheets
 ```
 
-## Security notes
+## Security Notes
 
-- Passwords are stored using BCrypt hashes.
-- Spring Security protects authenticated routes.
-- Admin routes require the ADMIN role.
-- CSRF protection remains enabled.
-- Database credentials should be supplied locally through environment variables.
-- This is an educational project; review production deployment, database migrations, rate limiting and operational security before exposing it publicly.
+- Passwords are stored as BCrypt hashes.
+- Access to protected routes is handled by Spring Security.
+- Administrator functionality is restricted by role.
+- CSRF protection is enabled for form submissions.
+- Database credentials should be supplied through environment variables and never committed.
+
+## Author
+
+**Ashish Kumar**
+
+- GitHub: [ashishjha2910](https://github.com/ashishjha2910)
+
+---
+
+If you find an issue or have a suggestion, feel free to open a GitHub issue.
