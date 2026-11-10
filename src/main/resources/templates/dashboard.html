@@ -36,7 +36,7 @@
         <tr th:each="attempt : ${attempts}">
           <td th:text="${attempt.quiz.title}"></td>
           <td th:text="${attempt.score} + ' / ' + ${attempt.totalQuestions}"></td>
-          <td th:text="${#temporals.format(attempt.submittedAt, 'dd MMM yyyy HH:mm')}"></td>
+          <td th:text="${#temporals.format(attempt.submittedAt.plusHours(5).plusMinutes(30), 'dd MMM yyyy HH:mm')}"></td>
         </tr>
       </tbody>
     </table>
